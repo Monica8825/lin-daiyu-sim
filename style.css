@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=ZCOOL+XiaoWei&display=swap');
+:root{
+  --bg1:#1a1210;--bg2:#2a1f1a;--bg3:#2e2118;--bg3h:#3a2a20;
+  --t1:#e8d5c4;--t2:#b89a82;--t3:#8a7060;
+  --pink:#d4728c;--pinkL:#e8a0b0;--gold:#c9a96e;--goldL:#e0c890;
+  --red:#c45555;--green:#6b9e78;--blue:#6889a8;--purple:#9878a8;
+  --bdr:#4a3828;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Serif SC',serif;background:var(--bg1);color:var(--t1);min-height:100vh;overflow-x:hidden}
+
+/* 花瓣 */
+.petals-container{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.petal{position:absolute;top:-20px;opacity:.3;font-size:16px;animation:fall linear infinite}
+@keyframes fall{0%{transform:translateY(-20px) rotate(0) translateX(0);opacity:0}10%{opacity:.3}90%{opacity:.3}100%{transform:translateY(100vh) rotate(720deg) translateX(80px);opacity:0}}
+
+/* 通知 */
+.notification{position:fixed;top:20px;right:20px;background:var(--bg3);border:1px solid var(--gold);border-radius:8px;padding:14px 20px;color:var(--goldL);font-family:'Noto Serif SC',serif;font-size:13px;z-index:200;opacity:0;transform:translateX(100px);transition:all .4s;max-width:300px}
+.notification.show{opacity:1;transform:translateX(0)}
+
+/* 开始画面 */
+#title-screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(180deg,#1a1210,#2a1815 50%,#1a1210);z-index:100;transition:opacity 1s}
+#title-screen.hidden{opacity:0;pointer-events:none}
+.title-deco{width:120px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:20px 0}
+.game-title{font-family:'ZCOOL XiaoWei','Noto Serif SC',serif;font-size:52px;color:var(--gold);text-shadow:0 0 40px rgba(201,169,110,.3);letter-spacing:12px}
+.game-subtitle{font-size:18px;color:var(--t2);letter-spacing:6px;margin-bottom:40px}
+.title-quote{font-size:14px;color:var(--t3);font-style:italic;max-width:500px;text-align:center;line-height:2;margin-bottom:50px}
+.start-btn{padding:14px 60px;background:0 0;border:1px solid var(--gold);color:var(--gold);font-family:'Noto Serif SC',serif;font-size:18px;letter-spacing:8px;cursor:pointer;transition:all .4s}
+.start-btn:hover{background:rgba(201,169,110,.1);box-shadow:0 0 30px rgba(201,169,110,.15);transform:translateY(-2px)}
+
+/* 主容器 */
+#game-container{display:none;max-width:900px;margin:0 auto;padding:20px;position:relative;z-index:1}
+#game-container.active{display:block}
+.game-header{text-align:center;padding:20px 0 10px;border-bottom:1px solid var(--bdr);margin-bottom:20px}
+.game-header h1{font-family:'ZCOOL XiaoWei','Noto Serif SC',serif;font-size:28px;color:var(--gold);letter-spacing:6px}
+.chapter-indicator{font-size:13px;color:var(--t3);margin-top:6px;letter-spacing:2px}
+
+/* 属性面板 */
+.stats-panel{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.stat-item{background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px;transition:all .3s}
+.stat-item:hover{background:var(--bg3h)}
+.stat-icon{font-size:20px;width:28px;text-align:center}
+.stat-info{flex:1}
+.stat-name{font-size:11px;color:var(--t3);margin-bottom:4px}
+.stat-bar-bg{width:100%;height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
+.stat-bar{height:100%;border-radius:3px;transition:width .8s}
+.stat-bar.health{background:linear-gradient(90deg,var(--red),#e07070)}
+.stat-bar.talent{background:linear-gradient(90deg,var(--blue),#88aac8)}
+.stat-bar.mood{background:linear-gradient(90deg,var(--purple),#b898c8)}
+.stat-bar.social{background:linear-gradient(90deg,var(--green),#88b898)}
+.stat-bar.pride{background:linear-gradient(90deg,var(--gold),var(--goldL))}
+.stat-bar.love{background:linear-gradient(90deg,var(--pink),var(--pinkL))}
+.stat-value{font-size:11px;color:var(--t2);margin-top:3px}
+
+/* 物品栏 */
+.inv-toggle{text-align:center;margin-bottom:15px}
+.inv-toggle button{background:0 0;border:1px solid var(--bdr);color:var(--t3);font-family:'Noto Serif SC',serif;font-size:12px;padding:6px 20px;border-radius:20px;cursor:pointer;transition:all .3s;letter-spacing:2px}
+.inv-toggle button:hover{border-color:var(--gold);color:var(--gold)}
+.inv-panel{background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;padding:16px;margin-bottom:20px;display:none}
+.inv-panel.open{display:block;animation:slideD .3s ease}
+@keyframes slideD{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+.inv-panel h3{font-size:14px;color:var(--gold);margin-bottom:10px;letter-spacing:2px}
+.inv-list{display:flex;flex-wrap:wrap;gap:8px}
+.inv-item{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:6px 12px;font-size:13px;color:var(--t2)}
+.inv-item.new{border-color:var(--gold);color:var(--goldL)}
+
+/* 故事区域 */
+.story-area{background:var(--bg2);border:1px solid var(--bdr);border-radius:12px;padding:30px;margin-bottom:20px;min-height:200px;position:relative;overflow:hidden;animation:fadeUp .6s ease}
+.story-area::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--pink),transparent)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.scene-tag{display:inline-block;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.25);color:var(--gold);padding:4px 14px;border-radius:4px;font-size:13px;letter-spacing:2px;margin-bottom:16px}
+.story-text{line-height:2;font-size:15px}
+.story-text p{margin-bottom:14px}
+.dialogue{color:var(--goldL);margin:12px 0;padding-left:16px;border-left:2px solid rgba(201,169,110,.3);font-style:italic}
+.narration{color:var(--t2);font-size:14px}
+.emphasis{color:var(--pinkL);font-weight:600}
+.thought{color:var(--purple);font-style:italic}
+.stat-change{display:inline-block;padding:2px 8px;border-radius:4px;font-size:12px;margin:2px 4px;font-style:normal}
+.stat-change.positive{background:rgba(107,158,120,.2);color:var(--green)}
+.stat-change.negative{background:rgba(196,85,85,.2);color:var(--red)}
+.divider{width:60%;margin:20px auto;height:1px;background:linear-gradient(90deg,transparent,var(--bdr),transparent)}
+
+/* 选项区 */
+.choices-area{margin-bottom:20px}
+.choices-area h3{font-size:14px;color:var(--t3);margin-bottom:12px;letter-spacing:2px;text-align:center}
+.choice-btn{display:block;width:100%;background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;padding:16px 20px;margin-bottom:10px;color:var(--t1);font-family:'Noto Serif SC',serif;font-size:14px;line-height:1.6;cursor:pointer;transition:all .3s;text-align:left}
+.choice-btn:hover{border-color:var(--pink);background:var(--bg3h);transform:translateX(4px);box-shadow:0 4px 20px rgba(212,114,140,.1)}
+.choice-num{display:inline-block;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;background:rgba(212,114,140,.15);color:var(--pink);font-size:12px;margin-right:12px}
+.choice-desc{font-size:12px;color:var(--t3);margin-top:6px;padding-left:36px}
+
+/* 结局画面 */
+#ending-screen{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:150;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px}
+#ending-screen.active{display:flex;animation:fadeUp 1s ease}
+#ending-screen h2{font-family:'ZCOOL XiaoWei','Noto Serif SC',serif;font-size:36px;color:var(--gold);letter-spacing:8px;margin-bottom:20px}
+.ending-poem{color:var(--pinkL);font-style:italic;font-size:16px;line-height:2.2;margin-bottom:30px}
+.ending-text{max-width:600px;line-height:2;color:var(--t2);font-size:15px;margin-bottom:40px}
+.restart-btn{padding:12px 40px;background:0 0;border:1px solid var(--gold);color:var(--gold);font-family:'Noto Serif SC',serif;font-size:16px;letter-spacing:4px;cursor:pointer;transition:all .3s}
+.restart-btn:hover{background:rgba(201,169,110,.1)}
+
+.game-footer{text-align:center;padding:20px 0 40px;color:var(--t3);font-size:12px;letter-spacing:2px}
+
+@media(max-width:768px){.stats-panel{grid-template-columns:repeat(2,1fr)}.game-title{font-size:36px;letter-spacing:6px}.story-area{padding:20px}#game-container{padding:12px}}
+@media(max-width:480px){.stats-panel{grid-template-columns:1fr}.game-title{font-size:28px}}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg1)}::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:3px}

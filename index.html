@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>潇湘泪梦 · 林黛玉模拟器</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="petals-container" id="petals"></div>
+<div class="notification" id="notification"></div>
+
+<!-- 开始画面 -->
+<div id="title-screen">
+  <div class="title-deco"></div>
+  <h1 class="game-title">潇湘泪梦</h1>
+  <p class="game-subtitle">林黛玉模拟器</p>
+  <div class="title-deco"></div>
+  <p class="title-quote">
+    "一朝春尽红颜老，花落人亡两不知。"<br><br>
+    她是书香门第的千金，是寄人篱下的孤女，<br>
+    是才华横溢的诗人，也是时代悲剧的缩影。<br><br>
+    这一次，由你来书写她的命运。
+  </p>
+  <button class="start-btn" onclick="startGame()">开 始 游 戏</button>
+</div>
+
+<!-- 游戏主界面 -->
+<div id="game-container">
+  <header class="game-header">
+    <h1>潇湘泪梦</h1>
+    <div class="chapter-indicator" id="chapter-indicator"></div>
+  </header>
+  <div class="stats-panel" id="stats-panel"></div>
+  <div class="inv-toggle"><button onclick="toggleInv()">🎒 随身物品</button></div>
+  <div class="inv-panel" id="inv-panel">
+    <h3>🎒 随身物品</h3>
+    <div class="inv-list" id="inv-list"></div>
+  </div>
+  <div class="story-area" id="story-area"></div>
+  <div class="choices-area" id="choices-area"></div>
+  <footer class="game-footer">潇湘泪梦 · 林黛玉模拟器 — 女性的成长，时代的悲剧</footer>
+</div>
+
+<!-- 结局画面 -->
+<div id="ending-screen">
+  <h2 id="ending-title"></h2>
+  <div class="ending-poem" id="ending-poem"></div>
+  <div class="ending-text" id="ending-text"></div>
+  <button class="restart-btn" onclick="location.reload()">重 新 开 始</button>
+</div>
+
+<script src="engine.js"></script>
+<script src="scenes.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
