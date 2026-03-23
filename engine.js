@@ -1,3 +1,186 @@
+// ========== 音乐系统 ==========
+const MusicSystem = {
+  ctx: null,
+  masterGain: null,
+  playing: false,
+  muted: false,
+  volume: 0.35,
+  currentNodes: [],
+  loopTimer: null,
+
+  init() {
+    if (this.ctx) return;
+    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    this.masterGain = this.ctx.createGain();
+    this.masterGain.gain.value = this.volume;
+    // 添加混响效果
+    const convolver = this.ctx.createConvolver();
+    const reverb = this.createReverb(2.5, 2);
+    convolver.buffer = reverb;
+    this.masterGain.connect(convolver);
+    convolver.connect(this.ctx.destination);
+    // 也直接连一路干声
+    const dryGain = this.ctx.createGain();
+    dryGain.gain.value = 0.6;
+    this.masterGain.connect(dryGain);
+    dryGain.connect(this.ctx.destination);
+  },
+
+  createReverb(duration, decay) {
+    const rate = this.ctx.sampleRate;
+    const length = rate * duration;
+    const impulse = this.ctx.createBuffer(2, length, rate);
+    for (let ch = 0; ch < 2; ch++) {
+      const data = impulse.getChannelData(ch);
+      for (let i = 0; i < length; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, decay);
+      }
+    }
+    return impulse;
+  },
+
+  // 古筝音色：用多个正弦波叠加模拟
+  playNote(freq, startTime, duration, vel = 0.12) {
+    const ctx = this.ctx;
+    const noteGain = ctx.createGain();
+    noteGain.connect(this.masterGain);
+
+    // 基音
+    const osc1 = ctx.createOscillator();
+    osc1.type = 'sine';
+    osc1.frequency.value = freq;
+    
+    // 二次泛音
+    const osc2 = ctx.createOscillator();
+    osc2.type = 'sine';
+    osc2.frequency.value = freq * 2;
+    const g2 = ctx.createGain();
+    g2.gain.value = vel * 0.3;
+    
+    // 三次泛音
+    const osc3 = ctx.createOscillator();
+    osc3.type = 'triangle';
+    osc3.frequency.value = freq * 3;
+    const g3 = ctx.createGain();
+    g3.gain.value = vel * 0.1;
+
+    osc1.connect(noteGain);
+    osc2.connect(g2); g2.connect(noteGain);
+    osc3.connect(g3); g3.connect(noteGain);
+
+    // 古筝拨弦包络：快速起音，缓慢衰减
+    noteGain.gain.setValueAtTime(0, startTime);
+    noteGain.gain.linearRampToValueAtTime(vel, startTime + 0.01);
+    noteGain.gain.exponentialRampToValueAtTime(vel * 0.5, startTime + duration * 0.15);
+    noteGain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+
+    [osc1, osc2, osc3].forEach(o => {
+      o.start(startTime);
+      o.stop(startTime + duration + 0.1);
+    });
+  },
+
+  // 五声音阶频率（D 宫调式，典型中国古风）
+  // D4=293.66, E4=329.63, F#4=369.99, A4=440, B4=493.88
+  // D5=587.33, E5=659.25, F#5=739.99, A5=880
+  pentatonic: {
+    'D4':293.66,'E4':329.63,'F#4':369.99,'A4':440,'B4':493.88,
+    'D5':587.33,'E5':659.25,'F#5':739.99,'A5':880,'B5':987.77,
+    'D3':146.83,'E3':164.81,'A3':220,'B3':246.94,
+  },
+
+  // 《葬花吟》旋律简化（基于五声音阶的改编）
+  // 花谢花飞花满天，红消香断有谁怜
+  zanghuayin: [
+    // 主旋律第一段
+    {n:'D5',d:0.8},{n:'B4',d:0.6},{n:'A4',d:0.4},{n:'F#4',d:0.8},
+    {n:'E4',d:0.6},{n:'D4',d:1.0},{n:null,d:0.4},
+    {n:'E4',d:0.4},{n:'F#4',d:0.6},{n:'A4',d:0.8},{n:'B4',d:0.4},
+    {n:'A4',d:1.2},{n:null,d:0.4},
+    // 第二段
+    {n:'D5',d:0.6},{n:'E5',d:0.4},{n:'D5',d:0.6},{n:'B4',d:0.8},
+    {n:'A4',d:0.6},{n:'F#4',d:0.6},{n:'E4',d:0.8},{n:null,d:0.3},
+    {n:'F#4',d:0.5},{n:'A4',d:0.5},{n:'B4',d:0.6},{n:'A4',d:0.6},
+    {n:'F#4',d:0.8},{n:'E4',d:1.0},{n:null,d:0.6},
+    // 第三段（高潮）—— 侬今葬花人笑痴
+    {n:'A4',d:0.4},{n:'B4',d:0.4},{n:'D5',d:0.8},{n:'E5',d:0.6},
+    {n:'F#5',d:1.0},{n:'E5',d:0.4},{n:'D5',d:0.8},{n:null,d:0.3},
+    {n:'B4',d:0.6},{n:'D5',d:0.4},{n:'B4',d:0.6},{n:'A4',d:0.8},
+    {n:'F#4',d:0.6},{n:'E4',d:0.6},{n:'D4',d:1.2},{n:null,d:0.5},
+    // 第四段（尾声）—— 一朝春尽红颜老
+    {n:'E4',d:0.5},{n:'F#4',d:0.5},{n:'A4',d:0.8},{n:'F#4',d:0.4},
+    {n:'E4',d:0.6},{n:'D4',d:1.0},{n:null,d:0.3},
+    {n:'E4',d:0.4},{n:'A4',d:0.6},{n:'B4',d:0.8},{n:'A4',d:0.6},
+    {n:'D5',d:1.0},{n:'B4',d:0.6},{n:'A4',d:1.2},{n:null,d:0.8},
+    // 低音伴奏结尾
+    {n:'D4',d:1.5},{n:null,d:0.5},{n:'A3',d:1.5},{n:null,d:0.5},
+    {n:'D4',d:2.0},{n:null,d:1.0},
+  ],
+
+  // 低音伴奏音符
+  bassNotes: ['D3','A3','E3','D3','B3','A3','D3','E3'],
+
+  playMelody() {
+    if (!this.ctx || this.muted) return;
+    const now = this.ctx.currentTime + 0.1;
+    let t = now;
+
+    // 主旋律
+    this.zanghuayin.forEach(note => {
+      if (note.n && this.pentatonic[note.n]) {
+        this.playNote(this.pentatonic[note.n], t, note.d * 1.3, 0.10);
+      }
+      t += note.d;
+    });
+
+    // 低音伴奏（稀疏的）
+    const totalDur = t - now;
+    const bassInterval = totalDur / this.bassNotes.length;
+    this.bassNotes.forEach((bn, i) => {
+      if (this.pentatonic[bn]) {
+        this.playNote(this.pentatonic[bn], now + i * bassInterval, bassInterval * 0.8, 0.05);
+      }
+    });
+
+    // 循环播放
+    const loopDelay = (totalDur + 2) * 1000;
+    this.loopTimer = setTimeout(() => {
+      if (this.playing && !this.muted) this.playMelody();
+    }, loopDelay);
+  },
+
+  start() {
+    this.init();
+    if (this.ctx.state === 'suspended') this.ctx.resume();
+    this.playing = true;
+    this.muted = false;
+    this.masterGain.gain.value = this.volume;
+    this.playMelody();
+    this.updateBtn();
+  },
+
+  toggle() {
+    if (!this.ctx) { this.start(); return; }
+    this.muted = !this.muted;
+    if (this.muted) {
+      this.masterGain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.5);
+      if (this.loopTimer) clearTimeout(this.loopTimer);
+    } else {
+      this.masterGain.gain.linearRampToValueAtTime(this.volume, this.ctx.currentTime + 0.5);
+      this.playMelody();
+    }
+    this.updateBtn();
+  },
+
+  updateBtn() {
+    const btn = document.getElementById('music-btn');
+    if (btn) {
+      btn.textContent = this.muted ? '🔇 音乐：关' : '🎵 葬花吟';
+      btn.classList.toggle('muted', this.muted);
+    }
+  }
+};
+
 // ========== 游戏引擎 ==========
 const Engine = {
   stats: {

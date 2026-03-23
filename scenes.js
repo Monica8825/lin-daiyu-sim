@@ -393,7 +393,8 @@ ch4_start:{chapter:'终章 · 花落人亡',scene:'潇湘馆',
     {text:'烧掉所有诗稿',desc:'这些心血，不愿留给不懂的人',next:'ending_burn',effects:{talent:-20,pride:15}},
     {text:'把诗稿托付给紫鹃保管',desc:'至少让文字留在世上',next:'ending_keep',effects:{talent:10,social:5}},
     {text:'挣扎着起身，最后看一眼窗外的竹子',desc:'你想站着面对最后一刻',next:'ending_stand',effects:{pride:20,health:-10}},
-    {text:'闭上眼，默默念着宝玉的名字',desc:'你这一生，到底爱过',next:'ending_love',effects:{love:20,mood:5}}
+    {text:'闭上眼，默默念着宝玉的名字',desc:'你这一生，到底爱过',next:'ending_love',effects:{love:20,mood:5}},
+    {text:'不——我还不想死。',desc:'你决定为自己活下去',next:'ending_survive',effects:{pride:20,health:10,mood:15}}
   ]
 },
 
@@ -469,6 +470,103 @@ ending_love:{chapter:'终章 · 花落人亡',scene:'潇湘馆',
   text:`<p>你闭上眼，默默念着那个名字。想起了初见，想起了桥上的月光，想起了他说的每一句真话。</p>
 <p>泪水从闭着的眼角滑落。你笑了：</p>
 <div class="dialogue">"我这一生……到底是爱过的。"</div>`,
+  choices:[]
+},
+
+// =================== 新结局 · 黛玉活了下来 ===================
+ending_survive:{chapter:'终章 · 向死而生',scene:'潇湘馆 · 深夜',
+  text:`<p>鞭炮声声声入耳。紫鹃趴在床边哭得浑身发抖。</p>
+<p>你躺在床上，看着头顶的帐幔，感觉身体像被抽空了一样——疼，冷，倦。</p>
+<p>忽然，你想起了父亲的话——</p>
+<div class="dialogue"><span class="emphasis">"你是林家的女儿。"</span></div>
+<p>又想起探春的话——</p>
+<div class="dialogue"><span class="emphasis">"只要脑子是自己的，总能找到活路。"</span></div>
+<p>还有宝玉在桥上说的——</p>
+<div class="dialogue"><span class="emphasis">"你的心，永远是你自己的。"</span></div>
+<p>你忽然攥紧了被角。</p>
+<p>不。</p>
+<p><span class="emphasis">你不要死在这里。不要死在别人的婚礼上。不要死在这座金丝笼里。</span></p>
+<div class="dialogue">"紫鹃。"</div>
+<p>紫鹃抬起泪眼。</p>
+<div class="dialogue">"帮我……扶起来。"</div>`,
+  choices:[
+    {text:'继续',next:'ending_survive_2'}
+  ]
+},
+
+ending_survive_2:{chapter:'终章 · 向死而生',scene:'潇湘馆 · 黎明',
+  effects:{health:5,pride:10,mood:10},
+  text:`<p>紫鹃不敢相信自己的耳朵。她扑过来扶住你，你的身体轻得像一片枯叶。</p>
+<p>你靠在紫鹃肩上，艰难地喘着气。窗外天色微亮——鞭炮声终于停了。</p>
+<div class="dialogue">"紫鹃，你带我走。"</div>
+<div class="dialogue">"姑娘——去哪儿？"</div>
+<div class="dialogue">"回扬州。回江南。"</div>
+<p>紫鹃愣住了。你的声音很弱，但眼神里有一种她从未见过的光——不是绝望，不是悲伤，而是一种<span class="emphasis">破釜沉舟的决绝</span>。</p>
+<div class="dialogue">"姑娘，您的身子……"</div>
+<div class="dialogue">"死也要死在自己的地方。不死在别人家。"</div>
+<p>你顿了顿，忽然笑了一下：</p>
+<div class="dialogue">"<span class="emphasis">不——我不打算死。</span>"</div>
+<p>你让紫鹃去找探春。天亮之后，探春来了——她的眼睛也是红的。她听完你的话，沉默了很久。</p>
+<p>然后她从怀里掏出一个荷包，里面是银票：</p>
+<div class="dialogue">"这是我攒的。——林姐姐，你走。我替你瞒着。"</div>`,
+  choices:[
+    {text:'继续',next:'ending_survive_3'}
+  ]
+},
+
+ending_survive_3:{chapter:'终章 · 向死而生',scene:'京城南门 · 清晨',
+  effects:{pride:10,mood:15},
+  text:`<p>三天后，趁着贾府还沉浸在宝玉婚后的混乱中，你和紫鹃悄悄从侧门出了荣国府。</p>
+<p>你裹着一件旧棉袍，坐在一辆不起眼的马车上。京城的城门缓缓打开。晨光刺眼。</p>
+<p>你回头看了一眼那座高墙大院——</p>
+<p class="thought">十二年。从六岁到十八岁。我的整个少女时代，都困在那座园子里。</p>
+<p>紫鹃紧紧握着你的手：</p>
+<div class="dialogue">"姑娘，前面的路……"</div>
+<div class="dialogue">"不知道。"</div>
+<p>你说完，忽然觉得胸口那个堵了很多年的东西，松动了一点。</p>
+<div class="dialogue">"<span class="emphasis">但至少是我自己选的路。</span>"</div>
+<p>马车驶出城门。官道两旁是初春的柳树，嫩芽刚冒出来，绿得发亮。</p>
+<p>你深深吸了一口气——空气里有泥土和青草的味道。像小时候扬州的味道。</p>
+<p>你咳嗽了两声。紫鹃赶紧递上热茶。你喝了一口，苦涩的药味里带着一丝甜。</p>
+<p>你望着前方的路，眼眶湿了，但嘴角是翘的。</p>`,
+  choices:[
+    {text:'继续',next:'ending_survive_final'}
+  ]
+},
+
+ending_survive_final:{chapter:'终章 · 向死而生',scene:'江南 · 三年后',
+  ending:true,
+  endTitle:'结局 · 潇湘重生',
+  endPoem:'未若锦囊收艳骨，一抔净土掩风流。<br>——不。她选择了另一种结局。',
+  endText:`<p>三年后。</p>
+<p>扬州城外有一座小小的书院，名叫<span class="emphasis">"潇湘书塾"</span>。</p>
+<p>书院的女先生姓林，据说是姑苏世家的后人。她身子清瘦，总是轻咳，但讲起诗词来眼睛亮得像天上的星星。</p>
+<p>她教女孩子们读书、写字、作诗。不教三从四德，只教她们——<span class="emphasis">"你的心是你自己的，谁也拿不走。"</span></p>
+<p>学生们都喊她"林先生"。</p>
+<p>有一天，一个学生问：</p>
+<p>"林先生，您从前在京城大户人家住过，为什么回到这里来？"</p>
+<p>林先生沉默了一会儿，望着窗外的翠竹，轻声说：</p>
+<p><span class="emphasis">"因为我想活着。活成自己想要的样子。"</span></p>
+<div style="margin:30px 0;height:1px;background:linear-gradient(90deg,transparent,#4a3828,transparent)"></div>
+<p>紫鹃还在她身边。偶尔有京城的信来——探春嫁去了海疆，在那边办了更大的事业。宝玉据说出了家，做了和尚。</p>
+<p>她听到这个消息时，手里的笔停了很久。</p>
+<p>然后她写下一首诗，夹进了母亲留下的那卷诗稿里。没有给任何人看。</p>
+<p style="margin-top:20px;text-align:center;color:#e8a0b0;font-style:italic;line-height:2.5">
+"质本洁来还洁去，一身诗意千寻瀑。<br>
+他年若是同淋雪，此生也算共白头。"
+</p>
+<div style="margin:30px 0;height:1px;background:linear-gradient(90deg,transparent,#4a3828,transparent)"></div>
+<p style="font-size:13px">她没有嫁人。没有等到命运的施舍。<br>
+但她活了下来——带着满身的才华和伤疤，带着一颗从未低头的心。<br><br>
+她把自己活成了一棵竹子。<br>
+风吹不折，雪压不弯。<br><br>
+<b>——这不是原著里的林黛玉。<br>但也许，这是她本该拥有的人生。</b></p>`,
+  text:`<p>三年后，扬州城外。</p>
+<p>一座小小的书院，翠竹环绕。一个清瘦的女先生正在教女孩子们读诗。</p>
+<p>她轻咳了两声，学生们关切地看她。她摆摆手，笑了：</p>
+<div class="dialogue">"没事。——我们继续。今天讲李清照。"</div>
+<p class="thought">林黛玉，活了下来。</p>
+<p class="thought">她没有等到谁来救她。她救了自己。</p>`,
   choices:[]
 }
 

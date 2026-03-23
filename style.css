@@ -97,6 +97,12 @@ body{font-family:'Noto Serif SC',serif;background:var(--bg1);color:var(--t1);min
 .restart-btn{padding:12px 40px;background:0 0;border:1px solid var(--gold);color:var(--gold);font-family:'Noto Serif SC',serif;font-size:16px;letter-spacing:4px;cursor:pointer;transition:all .3s}
 .restart-btn:hover{background:rgba(201,169,110,.1)}
 
+/* 音乐按钮 */
+.music-toggle{position:fixed;top:16px;right:16px;z-index:300;background:rgba(42,31,26,.9);border:1px solid var(--gold);color:var(--gold);font-family:'Noto Serif SC',serif;font-size:12px;padding:8px 16px;border-radius:20px;cursor:pointer;transition:all .3s;letter-spacing:1px;backdrop-filter:blur(8px)}
+.music-toggle:hover{background:rgba(201,169,110,.15);box-shadow:0 0 15px rgba(201,169,110,.2)}
+.music-toggle.muted{border-color:var(--t3);color:var(--t3)}
+.music-hint{font-size:12px;color:var(--t3);margin-top:20px;letter-spacing:1px;opacity:.7}
+
 .game-footer{text-align:center;padding:20px 0 40px;color:var(--t3);font-size:12px;letter-spacing:2px}
 
 @media(max-width:768px){.stats-panel{grid-template-columns:repeat(2,1fr)}.game-title{font-size:36px;letter-spacing:6px}.story-area{padding:20px}#game-container{padding:12px}}

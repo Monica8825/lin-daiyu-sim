@@ -1,6 +1,8 @@
 // ========== 启动逻辑 ==========
 function startGame() {
   document.getElementById('title-screen').classList.add('hidden');
+  // 启动背景音乐
+  MusicSystem.start();
   setTimeout(() => {
     document.getElementById('game-container').classList.add('active');
     renderScene('start');
